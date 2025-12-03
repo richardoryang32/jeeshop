@@ -6,8 +6,6 @@ import toast from "react-hot-toast"
 import Loading from "@/components/Loading"
 import { useRouter } from "next/navigation"
 import { useUser, useAuth } from "@clerk/nextjs"
-import imagekit from "@/configs/imageKit"
-import { prisma } from "@/lib/prisma"
 import axios from "axios"
 
 export default function CreateStore() {
