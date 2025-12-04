@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import  prisma  from "@/lib/prisma";
 import { getAuth } from "@clerk/nextjs/server";
+import imagekit from '@/configs/imageKit';
 
 //Get a store info and Seller Info
 
@@ -14,14 +15,14 @@ export async function GET(request){
         }
 
         //getstore info and inStock products with seller info
-        const store=await prisma.store.findFirst({
+        const store=await prisma.store.findUnique({
             where:{username,isActive:true},
             include:{Product:{include:{rating:true}}}
         })
 
         //Suppose there is no store found
         if(!store){
-            return NextResponse.json({error:'store not found'}, {status:404});
+            return NextResponse.json({error:'store not found'}, {status:400});
         }
         //if a store os found, return the store info
         return NextResponse.json({store});

@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import authSeller from "@/middlewares/authSeller";
+import  prisma  from "@/lib/prisma";
 import { getAuth } from "@clerk/nextjs/server";
+import imagekit from '@/configs/imageKit';
+import authSeller from "@/middlewares/authSeller"
 
 
 //toggle stock of a product
@@ -42,6 +43,6 @@ export async function POST(request){
 
     }catch(error){
         console.error(error);
-        return NextResponse.json({error:'internal server error'}, {status:500});
+        return NextResponse.json({error:error.code || error.message}, {status:400});
     }
 }

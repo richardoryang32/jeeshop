@@ -6,7 +6,9 @@ import toast from "react-hot-toast"
 import Loading from "@/components/Loading"
 import { useRouter } from "next/navigation"
 import { useUser, useAuth } from "@clerk/nextjs"
+import  prisma  from "@/lib/prisma"
 import axios from "axios"
+import imagekit from '@/configs/imageKit'
 
 export default function CreateStore() {
 
@@ -35,7 +37,36 @@ export default function CreateStore() {
     }
 
     const fetchSellerStatus = async () => {
-        // Logic to check if the store is already submitted
+        //Let's get the seller
+        const token = await getToken()
+        try{
+          const {data} = await axios.get('/api/store/create',{
+            headers:{Authorization:`Bearer ${token}`}
+          })
+          //Let's check the status and switch position accordingly
+          if(["pending","approved","rejected"].includes(data.status)){
+            setAlreadySubmitted(true)
+            setStatus(data.status)
+            switch(data.status){
+                case "approved":
+                    setMessage("Your store has been approved! Redirecting to dashboard...")
+                    setTimeout(() => {
+                        router.push('/store')
+                    }, 5000)
+                    break;
+                case "pending":
+                    setMessage("Your store application is under review. We will notify you once it's approved.")
+                    break;
+                case "rejected":
+                    setMessage("Unfortunately, your store application was rejected. You may contact support for more information.")
+                    break;
+            }
+        }else{
+            setAlreadySubmitted(false)
+        }
+    } catch(error) {
+        toast.error(error?.response?.data?.error || error.message);
+        }
 
 
 
@@ -44,11 +75,9 @@ export default function CreateStore() {
 
     const onSubmitHandler = async (e) => {
         e.preventDefault()
-        // Logic to submit the store details
         //if the user is not logged in, return error
         if(!user){
             toast.error('you must be logged in to perform this action')
-            return;
         }
         try{
          const token = await getToken();
@@ -64,13 +93,14 @@ export default function CreateStore() {
 
          //make the api call to create the store
          //using the axios library
-         const {data}= await axios.post('/api/inngest/store/create', formData, {
+         const {data}= await axios.post('/api/store/create', formData, {
             headers:{Authorization:`Bearer ${token}`}})
             toast.success(data.message);
+            //let's call the fetch function 
+            await fetchSellerStatus();
         
         }catch(error){
             toast.error(error?.response?.data?.error || error.message);
-            return;
         }
 
         
@@ -79,8 +109,10 @@ export default function CreateStore() {
     }
 
     useEffect(() => {
-        fetchSellerStatus()
-    }, [])
+        if(user){
+             fetchSellerStatus()
+        }
+    }, [user])
     //user the user is not logged in, show a message to login
     if(!user){
         return(
@@ -98,7 +130,7 @@ export default function CreateStore() {
                         {/* Title */}
                         <div>
                             <h1 className="text-3xl ">Add Your <span className="text-slate-800 font-medium">Store</span></h1>
-                            <p className="max-w-lg">To become a seller on GoCart, submit your store details for review. Your store will be activated after admin verification.</p>
+                            <p className="max-w-lg">To become a seller on JeesCage, submit your store details for review. Your store will be activated after admin verification.</p>
                         </div>
 
                         <label className="mt-10 cursor-pointer">

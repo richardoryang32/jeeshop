@@ -60,7 +60,6 @@ export async function POST(request){
             transformation:[
                 {quality:'auto'},
                 {format:'webp'},
-                {height:200},
                 {width:200}
             ]
         })
@@ -69,9 +68,9 @@ export async function POST(request){
         const newStore=await prisma.store.create({
             data:{
                 userId, 
-                name, 
-                username:username.toLowerCase(), 
+                name,  
                 description, 
+                username:username.toLowerCase(),
                 email,
                  contacts,
                  address,

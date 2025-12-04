@@ -1,7 +1,7 @@
 import {getAuth} from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 import imagekit from '@/configs/imageKit';
-import { prisma } from '@/lib/prisma';
+import  prisma  from '@/lib/prisma';
 import authSeller from '@/middlewares/authSeller';
 
 //create a new product
@@ -16,13 +16,13 @@ export async function POST(request){
             return NextResponse.json({error:'you are not authorized to perform this action'}, {status:401});
         }
         //Get the data from the form
-        const formData=await request.formData();
-        const name=formData.get('name');
-        const description=formData.get('description');
-        const price=Number(formData.get('price'));
-        const category=formData.get('category');
-        const mrp=Number(formData.get('mrp'));
-        const images=formData.getAll('images');
+        const formData=await request.formData()
+        const name=formData.get('name')
+        const description=formData.get('description')
+        const price=Number(formData.get('price'))
+        const category=formData.get('category')
+        const mrp=Number(formData.get('mrp'))
+        const images=formData.getAll('images')
 
         //if it is not of any of the following, then return a status
         if(!name || !description || !price || !category || !mrp || images.length<1){
@@ -55,9 +55,9 @@ await prisma.product.create({
     data:{
         name,
         description,
+         mrp,
         price,
         category,
-        mrp,
         images:imagesUrl,
         storeId
         }

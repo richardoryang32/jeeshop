@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import prisma  from "@/lib/prisma";
 import authSeller from "@/middlewares/authSeller";
 import { getAuth } from "@clerk/nextjs/server";
+import imagekit from '@/configs/imageKit';
 
 //Get the data for the dashboard for a seller (total orders, total earnings, total products)
 export async function GET(request){
@@ -20,16 +21,16 @@ export async function GET(request){
             where:{storeId},
         })
         const ratings=await prisma.rating.findMany({
-            where:{product:{in:{id:products.map((product)=>product.id)}}},
+            where:{product:{in:products.map(product=>product.id)}},
             include:{product:true, user:true}
         })
 
         //providing ratings on the dashboard
         const dashboardData={
             totalOrders:orders.length,
-            totalEarnings:Math.round(orders.reduce((total, order)=>total + order.totalPrice, 0)),
+            totalEarnings:Math.round(orders.reduce((acc, order)=>acc + order.totalPrice, 0)),
             totalProducts:products.length,
-            ratings:ratings
+            ratings
         }
         //return the dashboard data
         return NextResponse.json({dashboardData});
