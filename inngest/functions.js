@@ -1,5 +1,5 @@
 import {inngest} from './client'
-import prisma from '@/lib/prisma'
+import prisma from "@/lib/prisma"
 
 //create an inngest function to save all user data
 

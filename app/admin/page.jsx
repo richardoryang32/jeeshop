@@ -6,6 +6,7 @@ import { CircleDollarSignIcon, ShoppingBasketIcon, StoreIcon, TagsIcon } from "l
 import { useEffect, useState } from "react"
 
 export default function AdminDashboard() {
+    //we need the token for making api calls for the dashboard data
 
     const currency = process.env.NEXT_PUBLIC_CURRENCY_SYMBOL || 'GHS'
 

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import  prisma  from "@/lib/prisma";
 import authSeller from "@/middlewares/authSeller";
 import { getAuth } from "@clerk/nextjs/server";
-import imagekit from '@/configs/imageKit';
+import imagekit from '@/configs/imagekit';
 
 //checking to see if the logged in user is a seller
 
